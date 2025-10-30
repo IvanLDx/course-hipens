@@ -1,7 +1,7 @@
 import asyncHandler from '../middleware/asyncHandler.js';
 import Product from '../models/projectModel.js';
 
-const getProduct = asyncHandler(async (req, res) => {
+const getProducts = asyncHandler(async (req, res) => {
 	const pageSize = 8;
 
 	const page = Number(req.query.pageNumber) || 1;
@@ -120,4 +120,4 @@ const createProductReview = asyncHandler(async (req, res) => {
 	}
 });
 
-export { getProduct, getProductById, createProduct, updateProduct, deleteProduct, createProductReview };
+export { getProducts, getProductById, createProduct, updateProduct, deleteProduct, createProductReview };
