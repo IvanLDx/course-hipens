@@ -126,3 +126,67 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 		throw new Error('User not found');
 	}
 });
+
+const getUsers = asyncHandler(async (req, res) => {
+	const users = await User.find({});
+	res.json(users);
+});
+
+const deleteUser = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.params.id);
+
+	if (user) {
+		if (user.isAdmain) {
+			res.status(400);
+			throw new Error('Cannot delete admin user');
+		}
+
+		await User.deleteOne({
+			_id: user._id
+		});
+		res.json({ message: 'User removed successfully' });
+	} else {
+		res.status(404);
+		throw new Error('User not found');
+	}
+});
+
+const getUserById = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.params.id).select('-password');
+
+	if (user) {
+		res.json(user);
+	} else {
+		res.status(404);
+		throw new Error('User not found');
+	}
+});
+
+const updateUser = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.params.id);
+
+	if (user) {
+		if (req.body.email && !validator.isEmail(req.body.email)) {
+			res.status(400);
+			throw new Error('Invalid email address');
+		}
+
+		user.name = req.body.name || user.name;
+		user.email = req.body.name || user.email;
+		user.isAdmin = Boolean(req.body.isAdmin);
+
+		const updatedUser = await user.save();
+
+		res.json({
+			_id: updatedUser._id,
+			name: updatedUser.name,
+			email: updatedUser.email,
+			isAdmin: updatedUser.isAdmin
+		});
+	} else {
+		res.status(404);
+		throw new Error('User not found');
+	}
+});
+
+export { authUser, registerUser, logoutUser, getUserProfile, updateUserProfile, getUsers, deleteUser, getUserById, updateUser };
