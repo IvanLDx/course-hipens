@@ -32,7 +32,7 @@ const getProductById = asyncHandler(async (req, res) => {
 	const product = await Product.findById(req.params.id);
 
 	if (product) {
-		res.json(product);
+		return res.json(product);
 	}
 	res.status(404);
 	throw new Error('Product not found');
@@ -41,6 +41,7 @@ const getProductById = asyncHandler(async (req, res) => {
 const createProduct = asyncHandler(async (req, res) => {
 	const product = new Product({
 		name: 'Sample name',
+		user: req.user._id,
 		price: 0,
 		image: '/uploads/sample.png',
 		category: 'Sample Category',
@@ -67,8 +68,8 @@ const updateProduct = asyncHandler(async (req, res) => {
 		product.category = category;
 		product.countInStock = countInStock;
 
-		const updateProduct = await product.save();
-		res.json(updateProduct);
+		const updatedProduct = await product.save();
+		res.json(updatedProduct);
 	} else {
 		res.status(404);
 		throw new Error('Product not found');
