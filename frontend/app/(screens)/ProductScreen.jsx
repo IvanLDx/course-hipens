@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '../../constants/Utils';
 import { Message } from '../../components/Message';
 import ProductImageCard from '../../components/ProductImageCard';
+import ProductDetailsCard from '../../components/productDetailsCard';
 
 const ProductScreen = () => {
 	const route = useRoute();
@@ -68,6 +69,7 @@ const ProductScreen = () => {
 					<Ionicons name="arrow-back-circle" size={40} color={Colors.primary} />
 				</TouchableOpacity>
 				<ProductImageCard imageUrl={product.image} />
+				<ProductDetailsCard product={product} qty={qty} setQty={setQty}></ProductDetailsCard>
 			</ScrollView>
 		</SafeAreaView>
 	);
