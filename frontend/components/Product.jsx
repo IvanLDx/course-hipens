@@ -7,7 +7,8 @@ import { BASE_URL } from '../constants/Urls';
 const Product = ({ product }) => {
 	const getImageUrl = (imagePath) => {
 		if (!imagePath) return null;
-		if (imagePath.startsWidth('http')) {
+
+		if (imagePath.indexOf('http') === 0) {
 			return imagePath;
 		}
 
@@ -44,7 +45,7 @@ const Product = ({ product }) => {
 					</View>
 
 					<View style={styles.ratingRow}>
-						<Rating value={product} tet={`${product.numReviews} reviews`} />
+						<Rating value={product} text={`${product.numReviews} reviews`} />
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
 		color: Colors.primary
 	},
 	availability: {
-		padding: 10,
+		padding: 4,
 		borderRadius: 20
 	},
 	availabilityText: {
