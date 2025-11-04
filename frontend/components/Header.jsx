@@ -38,8 +38,8 @@ const Header = () => {
 
 	return (
 		<View style={styles.headerContainer}>
-			<View style={styles.toRow}>
-				<Image source={require('../assets/images/logo.png')} />
+			<View style={styles.topRow}>
+				<Image source={require('../assets/images/logo.png')} style={styles.logo} />
 				<TouchableOpacity onPress={() => {}} style={styles.cartIconContainer}>
 					<Ionicons name="cart" size={35} color={Colors.primary} />
 				</TouchableOpacity>

@@ -8,13 +8,13 @@ const Rating = ({ value, text }) => {
 	return (
 		<View style={styles.ratingContainer}>
 			{[1, 2, 3, 4, 5].map((i) => (
-				<View style={styles.star}>
+				<View key={i} style={styles.star}>
 					{value >= i ? (
-						<FontAwesome name="star" size={15} color={Colors.starGold} />
+						<FontAwesome name="star" size={12} color={Colors.starGold} />
 					) : value >= i - 0.5 ? (
-						<FontAwesome name="start-half-o" size={15} color={Colors.starGold} />
+						<FontAwesome name="start-half-o" size={12} color={Colors.starGold} />
 					) : (
-						<FontAwesome name="star-o" size={15} color={Colors.starGold} />
+						<FontAwesome name="star-o" size={12} color={Colors.starGold} />
 					)}
 				</View>
 			))}
