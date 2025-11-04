@@ -6,8 +6,9 @@ import { useGetProductDetailsQuery } from '../../slices/productsApiSlice';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '../../constants/Utils';
 import { Message } from '../../components/Message';
+import ProductImageCard from '../../components/ProductImageCard';
 
-const orders = () => {
+const ProductScreen = () => {
 	const route = useRoute();
 	const navigation = useNavigation();
 	const { productId } = route.params;
@@ -66,12 +67,13 @@ const orders = () => {
 				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
 					<Ionicons name="arrow-back-circle" size={40} color={Colors.primary} />
 				</TouchableOpacity>
+				<ProductImageCard imageUrl={product.image} />
 			</ScrollView>
 		</SafeAreaView>
 	);
 };
 
-export default orders;
+export default ProductScreen;
 
 const styles = StyleSheet.create({
 	safeArea: {
