@@ -22,12 +22,67 @@ const Home = () => {
 
 	const renderPaginationButtons = () => {
 		if (!data?.pages || data.pages <= 1) return null;
+
+		return (
+			<View style={styles.paginationContainer}>
+				{Array.from({ length: data.pages }, (_, i) => i + 1).map((page) => {
+					<TouchableOpacity
+						key={page}
+						style={[styles.pageButton, page === data.page && styles.activePageButton]}
+						onPress={() => {
+							router.setParams({
+								pageNumber: page.toString(),
+								...(keyword ? { keyword } : {})
+							});
+						}}
+					>
+						<Text style={[styles.pageButtonText, page === data.page && styles.activePageButton]}>{page}</Text>
+					</TouchableOpacity>;
+				})}
+			</View>
+		);
 	};
 
+	const ListHeader = () => {
+		<>
+			<Header />
+			{error && (
+				<Message variant="error" style={styles.errorMessage}>
+					{error?.data?.message || error?.error || 'Failed to fetch products'}
+				</Message>
+			)}
+		</>;
+	};
+
+	const ListFooter = () => renderPaginationButtons();
+
 	return (
-		<View>
-			<Text>index</Text>
-		</View>
+		<SafeAreaView style={styles.safeArea}>
+			{isLoading ? (
+				<View style={styles.center}>
+					<ActivityIndicator size="large" color={Colors.primary}></ActivityIndicator>
+				</View>
+			) : (
+				<FlatList
+					data={data?.products}
+					keyExtractor={(item) => item._id}
+					renderItems={({ item }) => <Product product={item} />}
+					contentContainerStyle={styles.list}
+					numberColumns={2}
+					columnWrapperStyle={styles.columnWrapper}
+					showsVerticalScrollIndicator={false}
+					ListHeaderComponent={ListHeader}
+					ListFooterComponent={ListFooter}
+					ListEmptyComponent={
+						!error && (
+							<Message variant="info" style={styles.emptyMessage}>
+								No products available
+							</Message>
+						)
+					}
+				/>
+			)}
+		</SafeAreaView>
 	);
 };
 
