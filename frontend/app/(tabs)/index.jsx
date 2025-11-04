@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
 		minimumWidth: 40,
 		alignItems: 'center'
 	},
-	activeButton: {
+	activePageButton: {
 		backgroundColor: Colors.primary
 	},
 	pageButtonText: {

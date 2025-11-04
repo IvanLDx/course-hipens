@@ -52,7 +52,7 @@ const Header = () => {
 						style={styles.searchInput}
 						placeholder="Search Products..."
 						value={searchText}
-						onChange={setSearchText}
+						onChangeText={setSearchText}
 						placeholderTextColor={Colors.lightGray}
 						returnKeyType="search"
 						onSubmitEditing={handleSeach}
