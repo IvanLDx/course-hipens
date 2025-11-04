@@ -28,13 +28,87 @@ const orders = () => {
 
 	const { data: product, isLoading, refetch, error } = useGetProductDetailsQuery(productId);
 
+	if (isLoading) {
+		return (
+			<View style={styles.center}>
+				<ActivityIndicator size="large" color={Colors.primary}></ActivityIndicator>
+			</View>
+		);
+	}
+
+	if (error) {
+		const errorMessage = error?.data?.message || error.error;
+
+		return (
+			<View style={styles.center}>
+				<Message variant="error">{errorMessage}</Message>
+				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.errorBackButton}>
+					<Text style={styles.errorBackButtonText}>Go Back</Text>
+				</TouchableOpacity>
+			</View>
+		);
+	}
+
+	if (!product) {
+		return (
+			<View style={styles.center}>
+				<Message variant="info">No product data available</Message>
+				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.errorBackButton}>
+					<Text style={styles.errorBackButtonText}>Go Back</Text>
+				</TouchableOpacity>
+			</View>
+		);
+	}
+
 	return (
-		<View>
-			<Text>orders</Text>
-		</View>
+		<SafeAreaView style={styles.safeArea}>
+			<ScrollView contentContainerStyle={styles.container}>
+				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+					<Ionicons name="arrow-back-circle" size={40} color={Colors.primary} />
+				</TouchableOpacity>
+			</ScrollView>
+		</SafeAreaView>
 	);
 };
 
 export default orders;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: Colors.offWhite,
+		paddingTop: Platform.OS === 'android' ? 25 : 0
+	},
+	center: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: Colors.offWhite,
+		padding: 20
+	},
+	errorBackButton: {
+		backgroundColor: Colors.primary,
+		paddingVertical: 12,
+		paddingHorizontal: 25,
+		borderRadius: 10,
+		marginTop: 20,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.2,
+		shadowRadius: 3,
+		elevation: 2
+	},
+	errorBackButton: {
+		color: Colors.white,
+		fontWeight: '600',
+		fontSize: 16
+	},
+	container: {
+		padding: 18,
+		paddingBottom: 30
+	},
+	backButton: {
+		marginVertical: 10,
+		alignSelf: 'flex-start'
+	}
+});
