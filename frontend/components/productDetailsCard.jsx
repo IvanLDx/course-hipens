@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Rating from './Rating';
@@ -28,6 +28,24 @@ const ProductDetailsCard = ({ product, qty, setQty }) => {
 						{product.countInStock > 0 ? 'In Stock' : 'Out of Stock'}
 					</Text>
 				</View>
+
+				{product.countInStock > 0 && (
+					<View style={styles.quantityContainer}>
+						<Text style={styles.label}>Quantity:</Text>
+						<Text style={styles.pickerWrapper}>
+							<Picker selectedValue={qty} onValueChange={(itemValue) => setQty(itemValue)} style={styles.picker} itemStyle={styles.pickerItem}>
+								{[...Array(product.countInStock).keys()].map((x) => (
+									<Picker.Item key={x + 1} label={(x + 1).toString()} value={x + 1} color={Colors.darkGray} />
+								))}
+							</Picker>
+						</Text>
+					</View>
+				)}
+
+				<TouchableOpacity style={[styles.addToCartButton]}>
+					<Ionicons name="cart-outline" size={20} color={Colors.primary} />
+					<Text style={styles.addToCartText}>Add to Cart</Text>
+				</TouchableOpacity>
 			</View>
 		</View>
 	);
