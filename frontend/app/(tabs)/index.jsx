@@ -25,7 +25,7 @@ const Home = () => {
 
 		return (
 			<View style={styles.paginationContainer}>
-				{Array.from({ length: data.pages }, (_, i) => i + 1).map((page) => {
+				{Array.from({ length: data.pages }, (_, i) => i + 1).map((page) => (
 					<TouchableOpacity
 						key={page}
 						style={[styles.pageButton, page === data.page && styles.activePageButton]}
@@ -36,14 +36,14 @@ const Home = () => {
 							});
 						}}
 					>
-						<Text style={[styles.pageButtonText, page === data.page && styles.activePageButton]}>{page}</Text>
-					</TouchableOpacity>;
-				})}
+						<Text style={[styles.pageButtonText, page === data.page && styles.activePageButtonText]}>{page}</Text>
+					</TouchableOpacity>
+				))}
 			</View>
 		);
 	};
 
-	const ListHeader = () => {
+	const ListHeader = () => (
 		<>
 			<Header />
 			{error && (
@@ -51,8 +51,8 @@ const Home = () => {
 					{error?.data?.message || error?.error || 'Failed to fetch products'}
 				</Message>
 			)}
-		</>;
-	};
+		</>
+	);
 
 	const ListFooter = () => renderPaginationButtons();
 
@@ -66,9 +66,9 @@ const Home = () => {
 				<FlatList
 					data={data?.products}
 					keyExtractor={(item) => item._id}
-					renderItems={({ item }) => <Product product={item} />}
+					renderItem={({ item }) => <Product product={item} />}
 					contentContainerStyle={styles.list}
-					numberColumns={2}
+					numColumns={2}
 					columnWrapperStyle={styles.columnWrapper}
 					showsVerticalScrollIndicator={false}
 					ListHeaderComponent={ListHeader}
@@ -88,4 +88,59 @@ const Home = () => {
 
 export default Home;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: Colors.offWhite,
+		paddingTop: Platform.OS === 'android' ? 25 : 0
+	},
+	center: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	errorMessage: {
+		marginHorizontal: 10,
+		marginBottom: 10
+	},
+	emptyMessage: {
+		marginTop: 20,
+		alignSelf: 'center'
+	},
+	list: {
+		paddingBottom: 20,
+		paddingHorizontal: 10
+	},
+	columnWrapper: {
+		justifyContent: 'space-between',
+		marginBottom: 15
+	},
+	paginationContainer: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingVertical: 20,
+		flexWrap: 'wrap',
+		gap: 10
+	},
+	pageButton: {
+		paddingHorizontal: 12,
+		paddingVertical: 8,
+		borderRadius: 20,
+		backgroundColor: Colors.white,
+		borderWidth: 1,
+		borderColor: Colors.primary,
+		minimumWidth: 40,
+		alignItems: 'center'
+	},
+	activeButton: {
+		backgroundColor: Colors.primary
+	},
+	pageButtonText: {
+		color: Colors.primary,
+		fontWeight: '600'
+	},
+	activePageButtonText: {
+		color: Colors.white
+	}
+});
