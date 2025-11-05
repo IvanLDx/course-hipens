@@ -13,7 +13,7 @@ const Cart = () => {
 	const dispatch = useDispatch();
 	const { cartItems } = useSelector((state) => state.cart);
 	const totalItems = cartItems.reduce((acc, item) => acc + Number(item.qty), 0);
-	const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.qty), 0).toFixed(2);
+	const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.price) * totalItems, 0).toFixed(2);
 
 	const updateQuantity = (product, qty) => {
 		dispatch(addToCart({ ...product, qty }));
@@ -74,6 +74,18 @@ const Cart = () => {
 							contentContainerStyle={styles.list}
 							showsVerticalScrollIndicator={false}
 						/>
+
+						<View style={styles.summary}>
+							<Text style={styles.summaryTitle}>Order Summary</Text>
+							<View style={styles.summaryRow}>
+								<Text style={styles.label}>Total:</Text>
+								<Text style={styles.total}>${totalPrice}</Text>
+							</View>
+
+							<TouchableOpacity style={[styles.checkoutButton]}>
+								<Text style={styles.checkoutText}>Preceed to Checkout</Text>
+							</TouchableOpacity>
+						</View>
 					</View>
 				)}
 			</View>
@@ -83,4 +95,56 @@ const Cart = () => {
 
 export default Cart;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: Colors.offWhite
+	},
+	container: {
+		padding: 20
+	},
+	header: {
+		fontSize: 28,
+		fontWeight: 'bold',
+		color: Colors.primary,
+		marginBottom: 20
+	},
+	emptyMessage: {
+		marginTop: 20,
+		padding: 20,
+		backgroundColor: Colors.infoBorder,
+		borderWidth: 1,
+		borderRadius: 8,
+		alignItems: 'center'
+	},
+	backLink: {
+		color: Colors.primary,
+		textDecorationLine: 'underline',
+		fontWeight: 'black'
+	},
+	list: {
+		paddingBottom: 20
+	},
+	itemContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		backgroundColor: Colors.white,
+		padding: 15,
+		marginBottom: 15,
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: Colors.lightGray,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 3,
+		elevation: 2
+	},
+	itemImage: {
+		width: 80,
+		height: 80,
+		resizeMode: 'contain',
+		borderRadius: 8,
+		marginRight: 15
+	}
+});
