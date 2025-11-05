@@ -5,6 +5,8 @@ import { useNavigation, useRoute, useRouter } from '@react-navigation/native';
 import { useGetProductDetailsQuery } from '../../slices/productsApiSlice';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '../../constants/Utils';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart } from '../../slices/cartSlice';
 import { Message } from '../../components/Message';
 import ProductImageCard from '../../components/ProductImageCard';
 import ProductDetailsCard from '../../components/productDetailsCard';
@@ -12,8 +14,10 @@ import ProductDetailsCard from '../../components/productDetailsCard';
 const ProductScreen = () => {
 	const route = useRoute();
 	const navigation = useNavigation();
+	const dispatch = useDispatch();
 	const { productId } = route.params;
 	const [qty, setQty] = useState(1);
+
 	useEffect(() => {
 		if (!productId) {
 			Toast.show({
@@ -62,6 +66,23 @@ const ProductScreen = () => {
 		);
 	}
 
+	const handleAddToCart = () => {
+		if (product) {
+			dispatch(addToCart({ ...product, qty }));
+			navigation.navigate('(screens)/Cart');
+		} else {
+			Toast.show({
+				type: 'error',
+				text1: 'Error',
+				text2: 'Product data not loaded yet. Cannot add to cart.',
+				position: 'top',
+				visibilityTime: 7000
+			});
+		}
+	};
+
+	const disableAddToCart = product?.countInStock === 0;
+
 	return (
 		<SafeAreaView style={styles.safeArea}>
 			<ScrollView contentContainerStyle={styles.container}>
@@ -69,7 +90,13 @@ const ProductScreen = () => {
 					<Ionicons name="arrow-back-circle" size={40} color={Colors.primary} />
 				</TouchableOpacity>
 				<ProductImageCard imageUrl={product.image} />
-				<ProductDetailsCard product={product} qty={qty} setQty={setQty}></ProductDetailsCard>
+				<ProductDetailsCard
+					product={product}
+					qty={qty}
+					setQty={setQty}
+					handleAddToCart={handleAddToCart}
+					disableAddToCart={disableAddToCart}
+				></ProductDetailsCard>
 			</ScrollView>
 		</SafeAreaView>
 	);
