@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 const Header = () => {
 	const [searchText, setSearchText] = useState('');
-	const cartItems = useSelector((state) => state.cart);
+	const { cartItems } = useSelector((state) => state.cart);
 	const navigation = useNavigation();
 	const router = useRouter();
 
@@ -42,12 +42,11 @@ const Header = () => {
 		<View style={styles.headerContainer}>
 			<View style={styles.topRow}>
 				<Image source={require('../assets/images/logo.png')} style={styles.logo} />
-				<TouchableOpacity onPress={() => navigation.navigate('(screns)/Cart')} style={styles.cartIconContainer}>
+				<TouchableOpacity onPress={() => navigation.navigate('(screens)/Cart')} style={styles.cartIconContainer}>
 					<Ionicons name="cart" size={35} color={Colors.primary} />
-
 					{cartItems.length > 0 && (
 						<View style={styles.cartBadge}>
-							<Text style={styles.cartBadgeText}>{cartItems.reduce((acc, item) => acc + item.qty, 0)}</Text>
+							<Text style={styles.cartBadgeText}>{cartItems.reduce((acc, item) => acc + Number(item.qty), 0)}</Text>
 						</View>
 					)}
 				</TouchableOpacity>
@@ -80,13 +79,15 @@ const Header = () => {
 				)}
 			</View>
 
-			{keyword && (
+			{keyword ? (
 				<View style={styles.activeFilterRow}>
 					<Text style={styles.filterText}>Showing result for: "{keyword}"</Text>
 					<TouchableOpacity style={styles.showAllButton} onPress={showAllProducts}>
 						<Text style={styles.showAllButtonText}>Show all products</Text>
 					</TouchableOpacity>
 				</View>
+			) : (
+				<></>
 			)}
 
 			<View style={styles.buttonRow}>
