@@ -43,7 +43,7 @@ const ProductDetailsCard = ({ product, qty, setQty }) => {
 				)}
 
 				<TouchableOpacity style={[styles.addToCartButton]}>
-					<Ionicons name="cart-outline" size={20} color={Colors.primary} />
+					<Ionicons name="cart-outline" size={20} color={Colors.white} />
 					<Text style={styles.addToCartText}>Add to Cart</Text>
 				</TouchableOpacity>
 			</View>
@@ -53,4 +53,107 @@ const ProductDetailsCard = ({ product, qty, setQty }) => {
 
 export default ProductDetailsCard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	detailsCard: {
+		backgroundColor: Colors.white,
+		borderRadius: 12,
+		padding: 20,
+		marginBottom: 20,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 5 },
+		shadowOpacity: 0.08,
+		shadowRadius: 10,
+		elevation: 2
+	},
+	productName: {
+		fontSize: 26,
+		fontWeight: '700',
+		marginBottom: 12,
+		textAlign: 'center'
+	},
+	ratingPriceRow: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginBottom: 18
+	},
+	priceValue: {
+		fontSize: 18,
+		fontWeight: 'bold',
+		color: Colors.primary
+	},
+	divider: {
+		height: 1.5,
+		backgroundColor: Colors.lightGray,
+		marginVertical: 15
+	},
+	description: {
+		fontSize: 16,
+		lineHeight: 24,
+		marginBottom: 20
+	},
+	statusQuantityCart: {
+		paddingTop: 15,
+		borderTopWidth: 1,
+		borderTopColor: Colors.lightGray
+	},
+	statusContainer: {
+		flex: 'row',
+		alignItems: 'center',
+		marginBottom: 15,
+		justifyContent: 'space-between'
+	},
+	label: {
+		fontSize: 16,
+		fontWeight: '600'
+	},
+	statusText: {
+		fontSize: 16,
+		fontWeight: '600'
+	},
+	inStock: {
+		color: Colors.success
+	},
+	outOfStock: {
+		color: Colors.danger
+	},
+	quantityContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 20,
+		justifyContent: 'space-between'
+	},
+	pickerWrapper: {
+		borderWidth: 1,
+		borderColor: Colors.lightGray,
+		borderRadius: 10,
+		overflow: 'hidden',
+		backgroundColor: Colors.white,
+		width: '50%'
+	},
+	picker: {
+		height: 60
+	},
+	pickerItem: {
+		fontSize: 16
+	},
+	addToCartButton: {
+		flexDirection: 'row',
+		backgroundColor: Colors.primary,
+		borderRadius: 10,
+		paddingVertical: 15,
+		justifyContent: 'center',
+		alignItems: 'center',
+		gap: 10,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 3 },
+		shadowOpacity: 0.25,
+		shadowRadius: 5,
+		evelation: 2
+	},
+	addToCartText: {
+		color: Colors.white,
+		fontWeight: 'bold',
+		fontSize: 16
+	}
+});
