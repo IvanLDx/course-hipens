@@ -5,7 +5,7 @@ import Rating from './Rating';
 import { Colors } from '../constants/Utils';
 import React from 'react';
 
-const ProductDetailsCard = ({ product, qty, setQty }) => {
+const ProductDetailsCard = ({ product, qty, setQty, handleAddToCart, disableAddToCart }) => {
 	if (!product) return null;
 
 	return (
@@ -42,7 +42,11 @@ const ProductDetailsCard = ({ product, qty, setQty }) => {
 					</View>
 				)}
 
-				<TouchableOpacity style={[styles.addToCartButton]}>
+				<TouchableOpacity
+					style={[styles.addToCartButton, disableAddToCart && styles.disableAddToCart]}
+					onPress={handleAddToCart}
+					disabled={disableAddToCart}
+				>
 					<Ionicons name="cart-outline" size={20} color={Colors.white} />
 					<Text style={styles.addToCartText}>Add to Cart</Text>
 				</TouchableOpacity>
@@ -155,5 +159,9 @@ const styles = StyleSheet.create({
 		color: Colors.white,
 		fontWeight: 'bold',
 		fontSize: 16
+	},
+	disableAddToCart: {
+		backgroundColor: Colors.lightGray,
+		opacity: 0.7
 	}
 });

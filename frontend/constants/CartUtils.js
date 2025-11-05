@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const addDecimals = (num) => {
-	return (Math.raound(num * 100) / 100).toFixed(2);
+	return (Math.round(num * 100) / 100).toFixed(2);
 };
 
 export const updateCart = (state) => {
