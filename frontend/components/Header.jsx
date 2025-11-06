@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 const Header = () => {
 	const [searchText, setSearchText] = useState('');
 	const { cartItems } = useSelector((state) => state.cart);
+	const { userInfo } = useSelector((state) => state.auth);
 	const navigation = useNavigation();
 	const router = useRouter();
 
@@ -91,7 +92,7 @@ const Header = () => {
 			)}
 
 			<View style={styles.buttonRow}>
-				<Text style={styles.welcomeText}></Text>
+				<Text style={styles.welcomeText}>{userInfo && `Welcome ${userInfo.name.split(' ')[0]} 👋`}</Text>
 			</View>
 		</View>
 	);

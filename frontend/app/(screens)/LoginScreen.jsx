@@ -66,13 +66,13 @@ const LoginScreen = () => {
 						style={styles.input}
 						placeholder="Enter email"
 						keyboardType="email-address"
-						autoCapitalize="not"
+						autoCapitalize="none"
 						value={email}
-						onChange={setEmail}
+						onChangeText={setEmail}
 					/>
 				</View>
 
-				<View style={styles.passwordInput}>
+				<View style={styles.formGroup}>
 					<Text style={styles.label}>Password</Text>
 					<View style={styles.passwordInputContainer}>
 						<TextInput
@@ -80,7 +80,7 @@ const LoginScreen = () => {
 							placeholder="Enter Password"
 							secureTextEntry={!showPassword}
 							value={password}
-							onChange={setPassword}
+							onChangeText={setPassword}
 						/>
 						<TouchableOpacity onPress={togglePasswordVisibility} style={styles.passwordToggle}>
 							{showPassword ? (
@@ -92,8 +92,8 @@ const LoginScreen = () => {
 					</View>
 				</View>
 
-				<TouchableOpacity style={([styles.button], isLoading && styles.buttonDisabled)} onPress={submitHandler} disabled={isLoading}>
-					{isLoading ? <ActivityIndicator color={Colors.primary} /> : <Text style={styles.buttonText}>Sign In</Text>}
+				<TouchableOpacity style={[styles.button, isLoading && styles.buttonDisabled]} onPress={submitHandler} disabled={isLoading}>
+					{isLoading ? <ActivityIndicator color={Colors.white} /> : <Text style={styles.buttonText}>Sign In</Text>}
 				</TouchableOpacity>
 
 				<View style={styles.registerContainer}>
@@ -123,12 +123,12 @@ const styles = StyleSheet.create({
 		marginBottom: 10
 	},
 	slogan: {
-		fontSize: 24,
+		fontSize: 18,
 		color: Colors.secondary,
 		textAlign: 'center'
 	},
 	title: {
-		fontSize: 24,
+		fontSize: 22,
 		fontWeight: 'bold',
 		marginBottom: 16,
 		textAlign: 'center',
@@ -152,5 +152,56 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		backgroundColor: Colors.white,
 		color: Colors.textColor
+	},
+	passwordInputContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		borderWidth: 1,
+		borderColor: '#ccc',
+		borderRadius: 8,
+		backgroundColor: Colors.white
+	},
+	passwordInput: {
+		flex: 1,
+		paddingVertical: 10,
+		paddingHorizontal: 12,
+		color: Colors.textColor
+	},
+	passwordToggle: {
+		padding: 10,
+		position: 'absolute',
+		right: 5
+	},
+	button: {
+		width: '100%',
+		backgroundColor: Colors.primary,
+		paddingVertical: 12,
+		paddingHorizontal: 8,
+		borderRadius: 8,
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginTop: 16
+	},
+	buttonDisabled: {
+		opacity: 0.7
+	},
+	buttonText: {
+		color: Colors.white,
+		fontSize: 16,
+		fontWeight: 'bold'
+	},
+	registerContainer: {
+		paddingVertical: 12,
+		alignItems: 'center',
+		marginTop: 10
+	},
+	registerText: {
+		fontSize: 14,
+		color: Colors.secondaryTextColor
+	},
+	registerLink: {
+		color: Colors.primary,
+		fontWeight: 'bold',
+		textDecorationLine: 'underline'
 	}
 });
