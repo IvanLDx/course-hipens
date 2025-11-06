@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 
 const profile = () => {
 	const router = useRouter();
-	const handleLoginPress = () => router.push('/loginScreen');
+	const handleLoginPress = () => router.push('/LoginScreen');
 
 	return (
 		<View>
