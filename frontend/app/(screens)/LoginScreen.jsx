@@ -4,7 +4,7 @@ import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLogin, useLoginMutation } from '../../slices/userApiSlice';
 import { setCredentials } from '../../slices/authSlice';
-import { FontAwesome6 } from '@expo/vector-icons/FontAwesome6';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Toast from 'react-native-toast-message';
 import FormContainer from '../../components/FormContainer';
 import { Colors } from '../../constants/Utils';
@@ -51,9 +51,47 @@ const LoginScreen = () => {
 	};
 
 	return (
-		<View>
-			<Text>LoginScreen</Text>
-		</View>
+		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+			<FormContainer>
+				<View style={styles.container}>
+					<Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+					<Text style={styles.slogan}>One Login. Endless Choices</Text>
+
+					<Text style={styles.title}>Sign In</Text>
+					<View style={styles.formGroup}>
+						<Text style={styles.label}>Email Address:</Text>
+						<TextInput
+							style={styles.input}
+							placeholder="Enter email"
+							keyboardType="email-address"
+							autoCapitalize="not"
+							value={email}
+							onChange={setEmail}
+						/>
+					</View>
+
+					<View style={styles.passwordInput}>
+						<Text style={styles.label}>Password</Text>
+						<View style={styles.passwordInputContainer}>
+							<TextInput
+								style={styles.passwordInput}
+								placeholder="Enter Password"
+								secureTextEntry={!showPassword}
+								value={password}
+								onChange={setPassword}
+							/>
+							<TouchableOpacity onPress={togglePasswordVisibility} style={styles.passwordToggle}>
+								{showPassword ? (
+									<FontAwesome6 name="eye-slash" size={20} color={Colors.primary} />
+								) : (
+									<FontAwesome6 name="eye" size={20} color={Colors.primary} />
+								)}
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+			</FormContainer>
+		</TouchableWithoutFeedback>
 	);
 };
 
