@@ -8,6 +8,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Toast from 'react-native-toast-message';
 import FormContainer from '../../components/FormContainer';
 import { Colors } from '../../constants/Utils';
+import { ActivityIndicator } from 'react-native-web';
 
 const LoginScreen = () => {
 	const [email, setEmail] = useState('');
@@ -53,42 +54,55 @@ const LoginScreen = () => {
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<FormContainer>
-				<View style={styles.container}>
+				<View style={styles.logoContainer}>
 					<Image source={require('../../assets/images/logo.png')} style={styles.logo} />
 					<Text style={styles.slogan}>One Login. Endless Choices</Text>
+				</View>
 
-					<Text style={styles.title}>Sign In</Text>
-					<View style={styles.formGroup}>
-						<Text style={styles.label}>Email Address:</Text>
+				<Text style={styles.title}>Sign In</Text>
+				<View style={styles.formGroup}>
+					<Text style={styles.label}>Email Address:</Text>
+					<TextInput
+						style={styles.input}
+						placeholder="Enter email"
+						keyboardType="email-address"
+						autoCapitalize="not"
+						value={email}
+						onChange={setEmail}
+					/>
+				</View>
+
+				<View style={styles.passwordInput}>
+					<Text style={styles.label}>Password</Text>
+					<View style={styles.passwordInputContainer}>
 						<TextInput
-							style={styles.input}
-							placeholder="Enter email"
-							keyboardType="email-address"
-							autoCapitalize="not"
-							value={email}
-							onChange={setEmail}
+							style={styles.passwordInput}
+							placeholder="Enter Password"
+							secureTextEntry={!showPassword}
+							value={password}
+							onChange={setPassword}
 						/>
+						<TouchableOpacity onPress={togglePasswordVisibility} style={styles.passwordToggle}>
+							{showPassword ? (
+								<FontAwesome6 name="eye-slash" size={20} color={Colors.primary} />
+							) : (
+								<FontAwesome6 name="eye" size={20} color={Colors.primary} />
+							)}
+						</TouchableOpacity>
 					</View>
+				</View>
 
-					<View style={styles.passwordInput}>
-						<Text style={styles.label}>Password</Text>
-						<View style={styles.passwordInputContainer}>
-							<TextInput
-								style={styles.passwordInput}
-								placeholder="Enter Password"
-								secureTextEntry={!showPassword}
-								value={password}
-								onChange={setPassword}
-							/>
-							<TouchableOpacity onPress={togglePasswordVisibility} style={styles.passwordToggle}>
-								{showPassword ? (
-									<FontAwesome6 name="eye-slash" size={20} color={Colors.primary} />
-								) : (
-									<FontAwesome6 name="eye" size={20} color={Colors.primary} />
-								)}
-							</TouchableOpacity>
-						</View>
-					</View>
+				<TouchableOpacity style={([styles.button], isLoading && styles.buttonDisabled)} onPress={submitHandler} disabled={isLoading}>
+					{isLoading ? <ActivityIndicator color={Colors.primary} /> : <Text style={styles.buttonText}>Sign In</Text>}
+				</TouchableOpacity>
+
+				<View style={styles.registerContainer}>
+					<Text style={styles.registerText}>
+						New User?{' '}
+						<Link href={{ pathname: '/RegisterScreen', params: redirect !== '/' ? { redirect } : {} }} style={styles.registerLink}>
+							Register
+						</Link>
+					</Text>
 				</View>
 			</FormContainer>
 		</TouchableWithoutFeedback>
@@ -97,4 +111,46 @@ const LoginScreen = () => {
 
 export default LoginScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	logoContainer: {
+		lignItems: 'center',
+		marginBottom: 30
+	},
+	logo: {
+		width: 150,
+		height: 150,
+		resizeMode: 'contain',
+		marginBottom: 10
+	},
+	slogan: {
+		fontSize: 24,
+		color: Colors.secondary,
+		textAlign: 'center'
+	},
+	title: {
+		fontSize: 24,
+		fontWeight: 'bold',
+		marginBottom: 16,
+		textAlign: 'center',
+		color: Colors.textColor
+	},
+	formGroup: {
+		marginBottom: 16
+	},
+	label: {
+		fontSize: 14,
+		fontWeight: '500',
+		color: Colors.textColor,
+		marginBottom: 8
+	},
+	input: {
+		width: '100%',
+		paddingVertical: 10,
+		paddingHorizontal: 12,
+		borderWidth: 1,
+		borderColor: '#ccc',
+		borderRadius: 8,
+		backgroundColor: Colors.white,
+		color: Colors.textColor
+	}
+});
