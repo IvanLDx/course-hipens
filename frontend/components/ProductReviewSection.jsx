@@ -6,7 +6,7 @@ import React from 'react';
 
 const ProductReviewSection = ({ reviews, userInfo, onAddReviewPress }) => {
 	return (
-		<View style={styles.revewSection}>
+		<View style={styles.reviewSection}>
 			<Text style={styles.sectionTitle}>Customer Reviews</Text>
 			{reviews.length === 0 ? (
 				<Message variant="info">No reviews yet.</Message>
@@ -24,15 +24,15 @@ const ProductReviewSection = ({ reviews, userInfo, onAddReviewPress }) => {
 							<Text style={styles.reviewComment}>{review.comment}</Text>
 						</View>
 					))}
-
-					{userInfo ? (
-						<TouchableOpacity style={styles.addReviewButton} onPress={onAddReviewPress}>
-							<Text style={styles.reviewButtonText}>Write a review</Text>
-						</TouchableOpacity>
-					) : (
-						<Message variant="info">Please login to submit a review</Message>
-					)}
 				</View>
+			)}
+
+			{userInfo ? (
+				<TouchableOpacity style={styles.addReviewButton} onPress={onAddReviewPress}>
+					<Text style={styles.addReviewButtonText}>Write a review</Text>
+				</TouchableOpacity>
+			) : (
+				<Message variant="info">Please login to submit a review</Message>
 			)}
 		</View>
 	);
@@ -76,5 +76,33 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		marginBottom: 8
+	},
+	reviewName: {
+		fontWeight: 'bold',
+		color: Colors.darkGray,
+		fontSize: 16
+	},
+	reviewDate: {
+		fontSize: 13,
+		color: Colors.darkGray
+	},
+	addReviewButton: {
+		backgroundColor: Colors.primary,
+		borderRadius: 10,
+		paddingVertical: 12,
+		alignItems: 'center',
+		marginTop: 20,
+		alignSelf: 'center',
+		paddingHorizontal: 30,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.2,
+		shadowRadius: 4,
+		elevation: 2
+	},
+	addReviewButtonText: {
+		color: Colors.white,
+		fontWeight: 'bold',
+		fontSize: 16
 	}
 });
