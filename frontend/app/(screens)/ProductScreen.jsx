@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator
 import React, { useState, useEffect } from 'react';
 import Toast from 'react-native-toast-message';
 import { useNavigation, useRoute, useRouter } from '@react-navigation/native';
-import { useGetProductDetailsQuery } from '../../slices/productsApiSlice';
+import { useGetProductDetailsQuery, useCreateReviewMutation } from '../../slices/productsApiSlice';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '../../constants/Utils';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,6 +10,7 @@ import { addToCart } from '../../slices/cartSlice';
 import { Message } from '../../components/Message';
 import ProductImageCard from '../../components/ProductImageCard';
 import ProductDetailsCard from '../../components/productDetailsCard';
+import ProductReviewSection from '../../components/ProductReviewSection';
 
 const ProductScreen = () => {
 	const route = useRoute();
@@ -17,6 +18,8 @@ const ProductScreen = () => {
 	const dispatch = useDispatch();
 	const { productId } = route.params;
 	const [qty, setQty] = useState(1);
+	const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+	const { userInfo } = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		if (!productId) {
@@ -97,6 +100,8 @@ const ProductScreen = () => {
 					handleAddToCart={handleAddToCart}
 					disableAddToCart={disableAddToCart}
 				></ProductDetailsCard>
+
+				<ProductReviewSection reviews={product.reviews} userInfo={userInfo} onAddReviewPress={() => setIsReviewModalOpen(true)} />
 			</ScrollView>
 		</SafeAreaView>
 	);
