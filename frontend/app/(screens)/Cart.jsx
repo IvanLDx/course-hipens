@@ -13,6 +13,7 @@ const Cart = () => {
 	const dispatch = useDispatch();
 	const { cartItems } = useSelector((state) => state.cart);
 	const totalItems = cartItems.reduce((acc, item) => acc + Number(item.qty), 0);
+	const { userInfo } = useSelector((state) => state.auth);
 	const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.price) * totalItems, 0).toFixed(2);
 
 	const updateQuantity = (product, qty) => {
@@ -21,6 +22,19 @@ const Cart = () => {
 
 	const deleteItem = (id) => {
 		dispatch(removeFromCart(id));
+	};
+
+	const handleCheckout = () => {
+		if (userInfo) {
+			router.push('(screens)/ShippingScreen');
+		} else {
+			router.push({
+				pathname: '(screens)/LoginScreen',
+				params: {
+					redirect: '(screens)/ShippingScreen'
+				}
+			});
+		}
 	};
 
 	const renderItem = ({ item }) => (
@@ -88,7 +102,11 @@ const Cart = () => {
 								<Text style={styles.value}>${totalPrice}</Text>
 							</View>
 
-							<TouchableOpacity style={[styles.checkoutButton]}>
+							<TouchableOpacity
+								style={[styles.checkoutButton, cartItems.length === 0 && styles.checkoutDisabled]}
+								onPress={handleCheckout}
+								disabled={cartItems.length === 0}
+							>
 								<Text style={styles.checkoutText}>Preceed to Checkout</Text>
 							</TouchableOpacity>
 						</View>
@@ -231,6 +249,9 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		marginTop: 15
+	},
+	checkoutDisabled: {
+		backgroundColor: Colors.darkGray
 	},
 	checkoutText: {
 		color: Colors.white,
