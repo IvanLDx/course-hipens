@@ -48,10 +48,12 @@ const onAddReviewModal = ({ isVisible, onClose, rating, setRating, comment, setC
 					</View>
 
 					<TouchableOpacity
-						style={([styles.submitReviewButton], isSubmitDisabled && styles.disabledButton)}
+						style={[styles.submitReviewButton, isSubmitDisabled && styles.disabledButton]}
 						onPress={onSubmit}
 						disabled={isSubmitDisabled}
-					></TouchableOpacity>
+					>
+						<Text style={[styles.submitReviewButtonText, isSubmitDisabled && styles.disabledButtonText]}>SubmitReview</Text>
+					</TouchableOpacity>
 				</View>
 			</View>
 		</Modal>
@@ -60,4 +62,86 @@ const onAddReviewModal = ({ isVisible, onClose, rating, setRating, comment, setC
 
 export default onAddReviewModal;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	modalOverlay: {
+		flex: 1,
+		backgroundColor: 'rgba(0, 0, 0, 0.6)',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	modalContent: {
+		backgroundColor: Colors.white,
+		borderRadius: 15,
+		padding: 25,
+		width: '90%',
+		maxWidth: 450,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 6 },
+		shadowOpacity: 0.15,
+		shadowRadius: 12,
+		elevation: 2
+	},
+	modalCloseButton: {
+		alignSelf: 'flex-end',
+		marginBottom: 10
+	},
+	modalTitle: {
+		fontSize: 22,
+		fontWeight: 'bold',
+		color: Colors.darkGray,
+		marginBottom: 20,
+		textAlign: 'center'
+	},
+	formGroup: {
+		marginBottom: 10
+	},
+	formLabel: {
+		fontSize: 16,
+		fontWeight: '600',
+		color: Colors.darkGray,
+		marginBottom: 8
+	},
+	ratingSelection: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		paddingVertical: 5,
+		marginBottom: 10
+	},
+	ratingStar: {
+		padding: 8
+	},
+	commentInput: {
+		borderWidth: 1,
+		color: Colors.lightGray,
+		borderRadius: 10,
+		padding: 12,
+		textAlignVertical: 'top',
+		minHeight: 120,
+		fontSize: 16,
+		backgroundColor: Colors.offWhite
+	},
+	submitReviewButton: {
+		backgroundColor: Colors.primary,
+		borderRadius: 10,
+		paddingVertical: 15,
+		alignItems: 'center',
+		marginTop: 20,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 3 },
+		shadowOpacity: 0.25,
+		shadowRadius: 5,
+		elevation: 2
+	},
+	submitReviewButtonText: {
+		color: Colors.white,
+		fontWeight: 'bold',
+		fontSize: 16
+	},
+	disabledButton: {
+		backgroundColor: Colors.lightGray,
+		opacity: 0.7
+	},
+	disabledButtonText: {
+		color: Colors.lightGray
+	}
+});
