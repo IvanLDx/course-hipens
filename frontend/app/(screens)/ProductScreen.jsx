@@ -11,6 +11,7 @@ import { Message } from '../../components/Message';
 import ProductImageCard from '../../components/ProductImageCard';
 import ProductDetailsCard from '../../components/productDetailsCard';
 import ProductReviewSection from '../../components/ProductReviewSection';
+import AddReviewModal from '../../components/addReviewModal';
 
 const ProductScreen = () => {
 	const route = useRoute();
@@ -19,7 +20,12 @@ const ProductScreen = () => {
 	const { productId } = route.params;
 	const [qty, setQty] = useState(1);
 	const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+	const [rating, setRating] = useState(0);
+	const [comment, setComment] = useState('');
 	const { userInfo } = useSelector((state) => state.auth);
+	const { data: product, isLoading, refetch, error } = useGetProductDetailsQuery(productId);
+	const disableAddToCart = product?.countInStock === 0;
+	const [createReview, { isLoading: loadingProductReview }] = useCreateReviewMutation();
 
 	useEffect(() => {
 		if (!productId) {
@@ -30,12 +36,8 @@ const ProductScreen = () => {
 				position: 'top',
 				visibilityTime: 7000
 			});
-
-			navigation.goBack();
 		}
 	}, [productId, navigation]);
-
-	const { data: product, isLoading, refetch, error } = useGetProductDetailsQuery(productId);
 
 	if (isLoading) {
 		return (
@@ -84,7 +86,60 @@ const ProductScreen = () => {
 		}
 	};
 
-	const disableAddToCart = product?.countInStock === 0;
+	const submitReviewHandler = async () => {
+		try {
+			if (!rating || rating === 0) {
+				Toast.show({
+					type: 'error',
+					text1: 'Error',
+					text2: 'Please select a rating before submit',
+					position: 'top',
+					visibilityTime: 4000
+				});
+				return;
+			}
+
+			if (!comment.trim()) {
+				Toast.show({
+					type: 'error',
+					text1: 'Error',
+					text2: 'Please write a comment before submit',
+					position: 'top',
+					visibilityTime: 4000
+				});
+				return;
+			}
+
+			await createReview({ productId, rating, comment }).unwrap();
+
+			refetch();
+			Toast.show({
+				type: 'success',
+				text1: 'Success',
+				text2: 'Review created successfully',
+				position: 'top',
+				visibilityTime: 7000
+			});
+
+			setRating(0);
+			setComment('');
+			setIsReviewModalOpen(false);
+		} catch (error) {
+			const errorMessage = error?.data?.message || error.error;
+
+			if (errorMessage.toLowerCase().includes('already reviewed')) {
+				setIsReviewModalOpen(false);
+			}
+
+			Toast.show({
+				type: 'error',
+				text1: 'Error',
+				text2: errorMessage,
+				position: 'top',
+				visibilityTime: 5000
+			});
+		}
+	};
 
 	return (
 		<SafeAreaView style={styles.safeArea}>
@@ -103,6 +158,17 @@ const ProductScreen = () => {
 
 				<ProductReviewSection reviews={product.reviews} userInfo={userInfo} onAddReviewPress={() => setIsReviewModalOpen(true)} />
 			</ScrollView>
+
+			<AddReviewModal
+				isVisible={isReviewModalOpen}
+				onClose={() => setIsReviewModalOpen(false)}
+				rating={rating}
+				setRating={setRating}
+				comment={comment}
+				setComment={setComment}
+				onSubmit={submitReviewHandler}
+				isLoading={loadingProductReview}
+			/>
 		</SafeAreaView>
 	);
 };

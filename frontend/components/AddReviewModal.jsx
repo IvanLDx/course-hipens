@@ -52,7 +52,7 @@ const onAddReviewModal = ({ isVisible, onClose, rating, setRating, comment, setC
 						onPress={onSubmit}
 						disabled={isSubmitDisabled}
 					>
-						<Text style={[styles.submitReviewButtonText, isSubmitDisabled && styles.disabledButtonText]}>SubmitReview</Text>
+						<Text style={[styles.submitReviewButtonText, isSubmitDisabled && styles.disabledButtonText]}>Submit Review</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
 	},
 	commentInput: {
 		borderWidth: 1,
-		color: Colors.lightGray,
+		color: Colors.secondaryTextColor,
 		borderRadius: 10,
 		padding: 12,
 		textAlignVertical: 'top',
@@ -142,6 +142,6 @@ const styles = StyleSheet.create({
 		opacity: 0.7
 	},
 	disabledButtonText: {
-		color: Colors.lightGray
+		color: Colors.secondaryTextColor
 	}
 });
