@@ -11,7 +11,7 @@ import { Message } from '../../components/Message';
 import ProductImageCard from '../../components/ProductImageCard';
 import ProductDetailsCard from '../../components/productDetailsCard';
 import ProductReviewSection from '../../components/ProductReviewSection';
-import AddReviewModal from '../../components/addReviewModal';
+import AddReviewModal from '../../components/AddReviewModal';
 
 const ProductScreen = () => {
 	const route = useRoute();
