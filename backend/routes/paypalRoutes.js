@@ -49,3 +49,59 @@ router.post('/create-order', async (req, res) => {
 		});
 	}
 });
+
+router.post('/capture-order', async (req, res) => {
+	try {
+		const { orderID } = req.body;
+
+		if (!orderID) {
+			return res.status(400).json({
+				error: 'No Id order provided'
+			});
+		}
+
+		const getOrderRequest = new paypal.orders.OrdersGetRequest(orderID);
+		const orderDetails = await paypalClient.execute(getOrderRequest);
+		const request = new paypal.orders.OrdersCaptureRequest(orderID);
+
+		request.requestBody({});
+
+		const response = await paypalClient.execute(request);
+		const captureData = {
+			id: response.result.id,
+			status: response.result.status
+		};
+
+		if (response.result.payer) {
+			captureData.payer = {
+				email_address: response.result.payer.email_address,
+				payer_id: response.result.payer.payer_id,
+				name: response.result.payer.name
+					? {
+							given_name: response.result.payer.name.given_name,
+							surname: response.result.payer.name.surname
+					  }
+					: undefined
+			};
+		}
+
+		if (response.result.purchase_units && response.result.purchase_units.length > 0) {
+			captureData.purchase_units = response.result.purchase_units.map((unit) => ({
+				reference_id: unit.reference_id,
+				amount: unit.payments?.captures?.[0]?.amount,
+				shipping: unit.shipping
+			}));
+		}
+
+		res.status(200).json(captureData);
+	} catch (error) {
+		res.status(500).json({
+			error: 'Failed to capture Paypal order',
+			details: error.message,
+			debug_id: error.debug_id || undefined,
+			links: error.links || undefined
+		});
+	}
+});
+
+export default router;
