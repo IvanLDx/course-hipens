@@ -27,7 +27,7 @@ const addOrderItem = asyncHandler(async (req, res) => {
 		return {
 			...item,
 			product: item._id,
-			price: item.price,
+			price: dbItem.price,
 			_id: undefined
 		};
 	});
@@ -52,7 +52,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
 });
 
 const getOrderById = asyncHandler(async (req, res) => {
-	const order = await Order.findById(req.params.id).populate('user', 'name', 'email');
+	const order = await Order.findById(req.params.id).populate('user', 'name email');
 
 	if (!order) {
 		res.status(404);
@@ -86,10 +86,33 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 
 		if (product.countInStock < item.qty) throw new Error(`Insuficient stock for ${product.name}`);
 
-		product.countInStock = -item.qty;
+		product.countInStock -= item.qty;
 		await product.save();
 	}
 
 	const updatedOrder = await Order.save();
 	res.json(updatedOrder);
 });
+
+const updateOrderToDelivered = asyncHandler(async (req, res) => {
+	const order = await Order.findById(req.params.id);
+
+	if (!order) {
+		res.status(404);
+		throw new Error('Order not found');
+	}
+
+	order.isDelivered = true;
+	order.deliveredAt = Date.now();
+
+	const updatedOrder = await order.save();
+
+	res.status(200).json(updatedOrder);
+});
+
+const getOrders = asyncHandler(async (req, res) => {
+	const orders = await Order.find({}).populate('user', 'id name');
+	res.json(orders);
+});
+
+export { addOrderItem, getMyOrders, getOrderById, updateOrderToPaid, updateOrderToDelivered, getOrders };
