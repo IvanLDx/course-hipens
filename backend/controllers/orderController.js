@@ -44,3 +44,52 @@ const addOrderItem = asyncHandler(async (req, res) => {
 	const createdOrder = await order.save();
 	res.status(201).json(createdOrder);
 });
+
+const getMyOrders = asyncHandler(async (req, res) => {
+	const orders = await Order.find({ user: req.user._id });
+
+	res.status(200).json(orders);
+});
+
+const getOrderById = asyncHandler(async (req, res) => {
+	const order = await Order.findById(req.params.id).populate('user', 'name', 'email');
+
+	if (!order) {
+		res.status(404);
+		throw new Error('Order not found');
+	}
+
+	res.status(200).json(order);
+});
+
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+	const order = await Order.findById(req.params.id);
+
+	if (!order) {
+		res.status(404);
+		throw new Error('Order not found');
+	}
+
+	order.isPaid = true;
+	order.paidAt = Date.now();
+	order.paymentResult = {
+		id: req.body.paymentId || req.body.id,
+		status: 'COMPLETED',
+		update_time: req.body.update_time || new Date().toISOString(),
+		email_address: req.body.email_address || 'not.provide@example.com'
+	};
+
+	for (const item of order.orderItems) {
+		const product = await Product.findById(item.product);
+
+		if (!product) throw new Error(`Product ${item.product} not found`);
+
+		if (product.countInStock < item.qty) throw new Error(`Insuficient stock for ${product.name}`);
+
+		product.countInStock = -item.qty;
+		await product.save();
+	}
+
+	const updatedOrder = await Order.save();
+	res.json(updatedOrder);
+});
