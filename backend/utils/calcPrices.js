@@ -3,10 +3,7 @@ function addDecimals(num) {
 }
 
 export function calcPrices(orderItems) {
-	const itemsPrice = addDecimals(
-		orderItems.reduce((acc, item) => acc + item.price * item.qty),
-		0
-	);
+	const itemsPrice = addDecimals(orderItems.reduce((acc, item) => acc + item.price * item.qty, 0));
 
 	const shippingPrice = addDecimals(itemsPrice > 100 ? 0 : 10);
 	const taxPrice = addDecimals(Number(0.15 * itemsPrice).toFixed(2));
