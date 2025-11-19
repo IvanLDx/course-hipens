@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator, Platform, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator, Platform, SafeAreaView, Image } from 'react-native';
 import React, { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,7 +55,66 @@ const PlaceOrderScreen = () => {
 						<Text style={styles.cardTitle}>Shipping Details</Text>
 						<Text style={styles.text}>
 							<Text style={styles.strongText}>Address: </Text>
+							{cart.shippingAddress.address},{cart.shippingAddress.city},{cart.shippingAddress.postalCode},{cart.shippingAddress.country}
 						</Text>
+					</View>
+
+					<View style={styles.card}>
+						<Text style={styles.cartTitle}>Payment Method</Text>
+						<Text style={styles.text}>
+							<Text style={styles.strongText}>Method: </Text>
+							{cart.paymentMethod}
+						</Text>
+					</View>
+
+					<View style={styles.card}>
+						<Text style={styles.cartTitle}>Your Order</Text>
+						{cart.cartItems.length === 0 ? (
+							<Message variant="info">Your cart is empty</Message>
+						) : (
+							<View style={styles.orderItemsContainer}>
+								{cart.cartItems.map((item, index) => (
+									<View key={index} style={styles.orderItem}>
+										<View style={styles.imageContainer}>
+											<Image source={{ uri: item.image }} style={styles.productImage} />
+										</View>
+
+										<View style={styles.productDetails}>
+											<Text style={styles.productName}>{item.name}</Text>
+											<Text style={styles.text}>
+												{item.qty} x ${item.price} =
+											</Text>
+											<Text style={styles.strongText}>${(item.qty * item.price).toFixed(2)}</Text>
+										</View>
+									</View>
+								))}
+							</View>
+						)}
+					</View>
+				</View>
+
+				<View style={styles.rightColumn}>
+					<View style={styles.card}>
+						<Text style={styles.cartTitle}>Order Summary</Text>
+						<View style={styles.summaryRow}>
+							<Text style={styles.text}>Items</Text>
+							<Text style={styles.textPrice}>${cart.itemsPrice}</Text>
+						</View>
+
+						<View style={styles.summaryRow}>
+							<Text style={styles.text}>Shipping</Text>
+							<Text style={styles.textPrice}>${cart.shippingPrice}</Text>
+						</View>
+
+						<View style={styles.summaryRow}>
+							<Text style={styles.text}>Tax</Text>
+							<Text style={styles.textPrice}>${cart.taxPrice}</Text>
+						</View>
+
+						<View style={styles.summaryRow}>
+							<Text style={styles.text}>Total</Text>
+							<Text style={styles.textPrice}>${cart.totalPrice}</Text>
+						</View>
 					</View>
 				</View>
 			</ScrollView>
