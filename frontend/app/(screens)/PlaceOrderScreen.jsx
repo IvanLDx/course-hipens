@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
+import Message from '../../components/Message';
 import { useCreateOrderMutation } from '../../slices/ordersApiSlice';
 import { clearCartItems } from '../../slices/cartSlice';
 import { Colors } from '../../constants/Utils';
@@ -27,6 +28,7 @@ const PlaceOrderScreen = () => {
 				orderItems: cart.cartItems,
 				shippingAddress: cart.shippingAddress,
 				paymentMethod: cart.paymentMethod,
+				itemsPrice: cart.itemsPrice,
 				shippingPrice: cart.shippingPrice,
 				taxPrice: cart.taxPrice,
 				totalPrice: cart.totalPrice
@@ -35,6 +37,7 @@ const PlaceOrderScreen = () => {
 			dispatch(clearCartItems());
 			navigation.navigate('(screens)/OrderScreen', { orderId: res._id });
 		} catch (error) {
+			console.trace(error);
 			Toast.show({
 				type: 'error',
 				text1: 'Error',
@@ -83,7 +86,9 @@ const PlaceOrderScreen = () => {
 											<View style={styles.productDetails}>
 												<Text style={styles.productName}>{item.name}</Text>
 												<Text style={styles.text}>
-													{item.qty} x ${item.price} =
+													<Text style={styles.strongText}>
+														{item.qty} x ${item.price} =
+													</Text>
 												</Text>
 												<Text style={styles.strongText}>${(item.qty * item.price).toFixed(2)}</Text>
 											</View>
@@ -113,7 +118,7 @@ const PlaceOrderScreen = () => {
 							</View>
 
 							<View style={[styles.summaryRow, styles.totalRow]}>
-								<Text style={styles.text}>Total</Text>
+								<Text style={styles.totalText}>Total</Text>
 								<Text style={styles.textPrice}>${cart.totalPrice}</Text>
 							</View>
 
@@ -169,7 +174,7 @@ const styles = StyleSheet.create({
 		marginBottom: 16
 	},
 	cardTitle: {
-		fontSize: 12,
+		fontSize: 22,
 		fontWeight: '600',
 		color: Colors.textColor,
 		marginBottom: 16
@@ -181,7 +186,8 @@ const styles = StyleSheet.create({
 	},
 	strongText: {
 		fontWeight: 'bold',
-		color: Colors.primary
+		color: Colors.primary,
+		fontSize: 16
 	},
 	orderItemsContainer: {
 		marginTop: 8
@@ -228,5 +234,31 @@ const styles = StyleSheet.create({
 		borderTopColor: Colors.lightGray,
 		paddingTop: 16,
 		marginTop: 8
+	},
+	totalText: {
+		fontSize: 18,
+		fontWeight: 'bold',
+		color: Colors.textColor
+	},
+	errorContainer: {
+		marginTop: 20
+	},
+	button: {
+		backgroundColor: Colors.primary,
+		paddingVertical: 12,
+		borderRadius: 8,
+		alignItems: 'center',
+		marginTop: 32
+	},
+	buttonDisabled: {
+		backgroundColor: Colors.lightGray
+	},
+	buttonText: {
+		color: Colors.white,
+		fontSize: 16,
+		fontWeight: 'bold'
+	},
+	leftColumn: {
+		marginBottom: 24
 	}
 });
