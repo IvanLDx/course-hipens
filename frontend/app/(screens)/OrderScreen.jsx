@@ -5,7 +5,6 @@ import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
-import { BlurView } from '@react-native-community/blur';
 
 import {
 	useGetOrderDetailsQuery,
@@ -561,7 +560,7 @@ export default function OrderScreen() {
 
 			{isProcessingPayment && (
 				<View style={styles.loadingOverlay}>
-					{Platform.OS === 'ios' ? <BlurView style={StyleSheet.absoluteFill} blurType="light" blurAmount={5} /> : <View style={styles.androidBlur} />}
+					<View style={styles.androidBlur} />
 					<View style={styles.loadingContainer}>
 						<ActivityIndicator size="large" color={Colors.primary} />
 						<Text style={styles.loadingText}>Processing your payment...</Text>

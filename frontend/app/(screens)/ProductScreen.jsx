@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator, Platform, SafeAreaView } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Toast from 'react-native-toast-message';
-import { useNavigation, useRoute, useRouter } from '@react-navigation/native';
+import { useNavigation, useRoute, useRouter, useFocusEffect } from '@react-navigation/native';
 import { useGetProductDetailsQuery, useCreateReviewMutation } from '../../slices/productsApiSlice';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '../../constants/Utils';
@@ -24,8 +24,14 @@ const ProductScreen = () => {
 	const [comment, setComment] = useState('');
 	const { userInfo } = useSelector((state) => state.auth);
 	const { data: product, isLoading, refetch, error } = useGetProductDetailsQuery(productId);
-	const disableAddToCart = product?.countInStock === 0;
 	const [createReview, { isLoading: loadingProductReview }] = useCreateReviewMutation();
+
+	useFocusEffect(
+		useCallback(() => {
+			refetch();
+		}),
+		{ refetch }
+	);
 
 	useEffect(() => {
 		if (!productId) {
@@ -74,7 +80,7 @@ const ProductScreen = () => {
 	const handleAddToCart = () => {
 		if (product) {
 			dispatch(addToCart({ ...product, qty }));
-			navigation.navigate('(screens)/Cart');
+			navigation.push('(screens)/Cart');
 		} else {
 			Toast.show({
 				type: 'error',
@@ -153,7 +159,7 @@ const ProductScreen = () => {
 					qty={qty}
 					setQty={setQty}
 					handleAddToCart={handleAddToCart}
-					disableAddToCart={disableAddToCart}
+					disableAddToCart={product?.countInStock === 0}
 				></ProductDetailsCard>
 
 				<ProductReviewSection reviews={product.reviews} userInfo={userInfo} onAddReviewPress={() => setIsReviewModalOpen(true)} />
