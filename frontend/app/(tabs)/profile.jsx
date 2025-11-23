@@ -7,6 +7,7 @@ import { useLogoutMutation } from '../../slices/userApiSlice';
 import { logout } from '../../slices/authSlice';
 import { resetCart } from '../../slices/cartSlice';
 import Message from '../../components/Message';
+import { Colors } from '../../constants/Utils';
 
 const profile = () => {
 	const { userInfo } = useSelector((state) => state.auth);
@@ -46,7 +47,7 @@ const profile = () => {
 		);
 	}
 
-	const menuItem = ({ icon, title, onPress, isLast }) => {
+	const MenuItem = ({ icon, title, onPress, isLast }) => {
 		<TouchableOpacity style={[styles.menuItem, !isLast && styles.menuItemBorder]} onPress={onPress}>
 			<Ionicons name={icon} size={22} color={Colors.primary} />
 			<Text style={styles.menuItemText}>{title}</Text>
@@ -54,9 +55,77 @@ const profile = () => {
 		</TouchableOpacity>;
 	};
 
-	return <asd></asd>;
+	return (
+		<SafeAreaView style={styles.safeArea}>
+			<ScrollView contentContainerStyle={styles.scrollContent}>
+				<View style={styles.profileCard}>
+					<Image source={require('../../assets/images/profile.png')} style={styles.profileImage} />
+					<Text style={styles.userName}>{userInfo.name.split(' ')[0]}</Text>
+				</View>
+
+				<View style={styles.menuCard}>
+					<MenuItem icon={'person-outline'} title="Account Information" onPress={() => router.push('/AccountInformation')} />
+					<MenuItem icom="document-text-outline" title="Orders" onPress={() => router.push('/order')} />
+					<MenuItem icon="cart-outline" title="Cart" onPress={() => router.push('/(screens)/Cart')} />
+
+					{userInfo.isAdmin && (
+						<>
+							<MenuItem icon="cube-outline" title="Products" onPress={() => router.push('/admin/ProductListScreen')} />
+							<MenuItem icon="list-outline" title="All Orders" onPress={() => router.push('/admin/OrderListScreen')} />
+							<MenuItem icon="people-outline" title="Users" onPress={() => router.push('/admin/UserListScreen')} />
+						</>
+					)}
+
+					<MenuItem icon="log-out-outline" title="Logout" onPress={logoutHandler} isLast />
+				</View>
+			</ScrollView>
+		</SafeAreaView>
+	);
 };
 
 export default profile;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: Colors.offWhite,
+		paddingTop: Platform.OS === 'android' ? 20 : 0
+	},
+	centeredContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingHorizontal: 20,
+		marginTop: 20
+	},
+	messageText: {
+		fontSize: 16,
+		textAlign: 'center',
+		color: Colors.textColor
+	},
+	loginLink: {
+		color: Colors.primary,
+		fontWeight: '600',
+		textDecorationLine: 'underline'
+	},
+	scrollContent: {
+		alignItems: 'center',
+		paddingVertical: 24,
+		paddingTop: 20
+	},
+	profileCard: {
+		alignItems: 'center',
+		backgroundColor: Colors.white,
+		paddingVertical: 24,
+		paddingHorizontal: 16,
+		borderRadius: 16,
+		width: '90%',
+		shadowColor: Colors.darkGray,
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.12,
+		shadowRadius: 8,
+		elevation: 2,
+		marginBottom: 20,
+		marginTop: 10
+	}
+});
