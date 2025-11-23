@@ -62,7 +62,7 @@ const AccountInformation = () => {
 
 	return (
 		<SafeAreaView style={styles.safeArea}>
-			<ScrollView style={styles.scrollContent}>
+			<ScrollView content={styles.scrollContent}>
 				<Text style={styles.title}>Account Information</Text>
 				<View style={styles.formContainer}>
 					{error && (
@@ -126,4 +126,78 @@ const AccountInformation = () => {
 
 export default AccountInformation;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: Colors.offWhite,
+		paddingTop: Platform.OS === 'android' ? 20 : 0
+	},
+	scrollContent: {
+		flexGrow: 1,
+		justifyContent: 'center'
+	},
+	formContainer: {
+		backgroundColor: Colors.white,
+		margin: 16,
+		padding: 16,
+		borderRadius: 12,
+		shadowColor: Colors.darkGray,
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 2
+	},
+	title: {
+		fontSize: 22,
+		fontWeight: 'bold',
+		color: Colors.primary,
+		textAlign: 'start',
+		padding: 20
+	},
+	inputContainer: {
+		marginBotton: 16
+	},
+	label: {
+		fontSize: 14,
+		fontWeight: '500',
+		color: Colors.textColor,
+		marginBottom: 8
+	},
+	input: {
+		backgroundColor: Colors.white,
+		borderWidth: 1,
+		borderColor: Colors.lightGray,
+		borderRadius: 8,
+		padding: 12,
+		fontSize: 15
+	},
+	passwordContainer: {
+		flexDirection: 'grow',
+		alignItems: 'center',
+		backgroundColor: Colors.lightGray,
+		borderWidth: 1,
+		borderColor: Colors.white,
+		borderRadius: 8
+	},
+	passwordInpunt: {
+		flex: 1,
+		padding: 12,
+		fontSize: 15,
+		color: Colors.textColor
+	},
+	eyeIcon: {
+		padding: 12
+	},
+	updateButton: {
+		backgroundColor: Colors.primary,
+		padding: 16,
+		borderRadius: 8,
+		alignItems: 'center',
+		marginTop: 8
+	},
+	updateButtonText: {
+		color: Colors.white,
+		fontSize: 16,
+		fontWeight: 'bold'
+	}
+});
