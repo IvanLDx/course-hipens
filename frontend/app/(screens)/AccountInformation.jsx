@@ -50,13 +50,77 @@ const AccountInformation = () => {
 				position: 'top',
 				visibilityTime: 5000
 			});
-		} catch (error) {}
+		} catch (error) {
+			setError(error?.data?.message);
+			Toast.show({
+				type: 'error',
+				text1: 'Update Failed',
+				text2: error?.data?.message
+			});
+		}
 	};
 
 	return (
-		<View>
-			<Text>AccountInformation</Text>
-		</View>
+		<SafeAreaView style={styles.safeArea}>
+			<ScrollView style={styles.scrollContent}>
+				<Text style={styles.title}>Account Information</Text>
+				<View style={styles.formContainer}>
+					{error && (
+						<Message variant="error">
+							<Text>{error}</Text>
+						</Message>
+					)}
+
+					<View style={styles.inputContainer}>
+						<Text style={styles.label}>Name</Text>
+						<TextInput style={styles.input} placeholder="Enter name" value={name} onChangeText={setName} />
+					</View>
+
+					<View style={styles.inputContainer}>
+						<Text style={styles.label}>Email</Text>
+						<TextInput style={styles.input} placeholder="Enter Email" value={email} onChangeText={setEmail} />
+					</View>
+
+					<View style={styles.inputContainer}>
+						<Text style={styles.label}>Password</Text>
+						<View style={styles.passwordContainer}>
+							<TextInput
+								style={styles.passwordInpunt}
+								placeholder="Enter Password"
+								value={password}
+								onChangeText={setPassword}
+								secureTextEntry={!showPassword}
+							/>
+
+							<TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
+								<Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={24} color={Colors.primary} />
+							</TouchableOpacity>
+						</View>
+					</View>
+
+					<View style={styles.inputContainer}>
+						<Text style={styles.label}>Confirm Password</Text>
+						<View style={styles.passwordContainer}>
+							<TextInput
+								style={styles.passwordInpunt}
+								placeholder="Confirm Password"
+								value={confirmPassword}
+								onChangeText={setConfirmPassword}
+								secureTextEntry={!showConfirmPassword}
+							/>
+
+							<TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+								<Ionicons name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'} size={24} color={Colors.primary} />
+							</TouchableOpacity>
+						</View>
+					</View>
+
+					<TouchableOpacity style={styles.updateButton} onPress={submitHandler} disabled={loadingUpdateProfile}>
+						{loadingUpdateProfile ? <ActivityIndicator color={Colors.white} /> : <Text style={styles.updateButtonText}>Update</Text>}
+					</TouchableOpacity>
+				</View>
+			</ScrollView>
+		</SafeAreaView>
 	);
 };
 
