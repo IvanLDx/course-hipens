@@ -8,6 +8,7 @@ import paypalRoutes from './routes/paypalRoutes.js';
 import cookieParser from 'cookie-parser';
 import errorHandler from './middleware/errorHandler.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import path from 'path';
 import cors from 'cors';
 
 dotenv.config();
@@ -27,6 +28,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/paypal', paypalRoutes);
 app.use('/api/upload', uploadRoutes);
+
+const uploadsDir = path.join(process.cwd(), '..', 'uploads');
+app.use('/uploads', express.static(uploadsDir));
 
 app.get('/api/config/paypal', (req, res) => {
 	const clientId = process.env.PAYPAL_CLIENT_ID;
