@@ -9,7 +9,7 @@ import { resetCart } from '../../slices/cartSlice';
 import Message from '../../components/Message';
 import { Colors } from '../../constants/Utils';
 
-const profile = () => {
+const Profile = () => {
 	const { userInfo } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const router = useRouter();
@@ -47,13 +47,13 @@ const profile = () => {
 		);
 	}
 
-	const MenuItem = ({ icon, title, onPress, isLast }) => {
+	const MenuItem = ({ icon, title, onPress, isLast }) => (
 		<TouchableOpacity style={[styles.menuItem, !isLast && styles.menuItemBorder]} onPress={onPress}>
 			<Ionicons name={icon} size={22} color={Colors.primary} />
 			<Text style={styles.menuItemText}>{title}</Text>
 			<Ionicons name="chevron-forward" size={20} color={Colors.secondary} />
-		</TouchableOpacity>;
-	};
+		</TouchableOpacity>
+	);
 
 	return (
 		<SafeAreaView style={styles.safeArea}>
@@ -64,8 +64,8 @@ const profile = () => {
 				</View>
 
 				<View style={styles.menuCard}>
-					<MenuItem icon={'person-outline'} title="Account Information" onPress={() => router.push('/AccountInformation')} />
-					<MenuItem icom="document-text-outline" title="Orders" onPress={() => router.push('/order')} />
+					<MenuItem icon="person-outline" title="Account Information" onPress={() => router.push('/AccountInformation')} />
+					<MenuItem icon="document-text-outline" title="Orders" onPress={() => router.push('/orders')} />
 					<MenuItem icon="cart-outline" title="Cart" onPress={() => router.push('/(screens)/Cart')} />
 
 					{userInfo.isAdmin && (
@@ -83,7 +83,7 @@ const profile = () => {
 	);
 };
 
-export default profile;
+export default Profile;
 
 const styles = StyleSheet.create({
 	safeArea: {
@@ -127,5 +127,45 @@ const styles = StyleSheet.create({
 		elevation: 2,
 		marginBottom: 20,
 		marginTop: 10
+	},
+	profileImage: {
+		width: 96,
+		height: 96,
+		borderRadius: 48,
+		marginBottom: 12
+	},
+	userName: {
+		fontSize: 18,
+		fontWeight: '600',
+		color: Colors.textColor
+	},
+	menuCard: {
+		backgroundColor: Colors.white,
+		borderRadius: 16,
+		paddingVertical: 8,
+		width: '90%',
+		shadowColor: Colors.darkGray,
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 2
+	},
+	menuItem: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingHorizontal: 20,
+		paddingVertical: 16,
+		width: '100%'
+	},
+	menuItemBorder: {
+		borderBottomWidth: 1,
+		borderBottomColor: Colors.lightGray
+	},
+	menuItemText: {
+		flex: 1,
+		marginLeft: 16,
+		fontSize: 16,
+		color: Colors.textColor,
+		fontWeight: '500'
 	}
 });
