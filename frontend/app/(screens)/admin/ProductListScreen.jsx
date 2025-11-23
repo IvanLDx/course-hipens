@@ -3,7 +3,7 @@ import React from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Message from '../../../components/Message';
-import { useGetProductsQuery, useDeleteProductMutation, useCreateReviewMutation } from '../../../slices/productsApiSlice';
+import { useGetProductsQuery, useDeleteProductMutation, useCreateProductMutation } from '../../../slices/productsApiSlice';
 import { Colors } from '../../../constants/Utils';
 
 const ProductListScreen = () => {
@@ -13,7 +13,7 @@ const ProductListScreen = () => {
 		pageNumber: Number(pageNumber)
 	});
 	const [deleteProduct, { isLoading: loadingDelete }] = useDeleteProductMutation();
-	const [createProduct, { isLoading: loadingCreate }] = useCreateReviewMutation();
+	const [createProduct, { isLoading: loadingCreate }] = useCreateProductMutation();
 
 	const deleteHandler = async (id) => {
 		Alert.alert('Delete Product', 'Are you sure you want to delete this product?', [
@@ -34,20 +34,12 @@ const ProductListScreen = () => {
 	};
 
 	const createProductHandler = async () => {
-		Alert.alert('Create Product', 'Are you shure you want to create a new product?', [
-			{ text: 'Cancel', style: 'cancel' },
-			{
-				text: 'Create',
-				onPress: async () => {
-					try {
-						await createProduct();
-						refetch();
-					} catch (error) {
-						Alert.alert('Error', error?.data?.message || error.error);
-					}
-				}
-			}
-		]);
+		try {
+			await createProduct();
+			refetch();
+		} catch (error) {
+			Alert.alert('Error', error?.data?.message || error.error);
+		}
 	};
 
 	const renderPaginationButtons = () => {
@@ -91,9 +83,15 @@ const ProductListScreen = () => {
 					<Text style={styles.title}>Products</Text>
 
 					<TouchableOpacity style={styles.addButton} onPress={createProductHandler}>
-						<FontAwesome name="plus" size={16} color={Colors.white} />
+						{loadingCreate ? (
+							<ActivityIndicator size="small" color={Colors.white} />
+						) : (
+							<>
+								<FontAwesome name="plus" size={16} color={Colors.white} />
 
-						<Text style={styles.addButtonText}>Add a product</Text>
+								<Text style={styles.addButtonText}>Add a product</Text>
+							</>
+						)}
 					</TouchableOpacity>
 				</View>
 
@@ -128,10 +126,15 @@ const ProductListScreen = () => {
 								>
 									<FontAwesome name="edit" color={Colors.primary} size={20} />
 								</TouchableOpacity>
+
+								<TouchableOpacity style={{ marginLeft: 5 }} onPress={() => deleteHandler(product._id)}>
+									<FontAwesome name="trash" size={20} color={Colors.textRed} />
+								</TouchableOpacity>
 							</View>
 						</View>
 					)}
-				></FlatList>
+					ListFooterComponent={renderPaginationButtons}
+				/>
 			</View>
 		</SafeAreaView>
 	);
@@ -139,4 +142,109 @@ const ProductListScreen = () => {
 
 export default ProductListScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: Colors.offWhite,
+		paddingTop: Platform.OS === 'android' ? 20 : 0
+	},
+	container: {
+		flex: 1,
+		padding: 16,
+		backgroundColor: Colors.offWhite
+	},
+	header: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginBottom: 20
+	},
+	title: {
+		fontSize: 22,
+		fontWeight: '600',
+		color: Colors.primary
+	},
+	addButton: {
+		backgroundColor: Colors.primary,
+		flexDirection: 'row',
+		alignItems: 'center',
+		padding: 12,
+		borderRadius: 8
+	},
+	addButtonText: {
+		color: Colors.white,
+		marginLeft: 8,
+		fontWeight: '600'
+	},
+	loaderContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	tableHeader: {
+		flexDirection: 'row',
+		backgroundColor: Colors.lightGray,
+		padding: 10,
+		borderRadius: 10,
+		marginBottom: 6
+	},
+	headerCell: {
+		fontWeight: 'bold',
+		fontSize: 14,
+		textAlign: 'center',
+		color: Colors.secondaryTextColor
+	},
+	tableRow: {
+		flexDirection: 'row',
+		backgroundColor: Colors.white,
+		paddingVertical: 12,
+		paddingHorizontal: 10,
+		marginVertical: 4,
+		borderRadius: 10,
+		shadowColor: '#000',
+		shadowOpacity: 0.05,
+		shadowRadius: 4,
+		shadowOffset: { width: 0, height: 2 },
+		elevation: 2,
+		alignItems: 'center'
+	},
+	cell: {
+		fontSize: 14,
+		textAlign: 'center',
+		color: Colors.textColor,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	actionsCell: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	paginationContainer: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingVertical: 20,
+		flexWrap: 'wrap',
+		gap: 10
+	},
+	pageButton: {
+		paddingHorizontal: 12,
+		paddingVertical: 8,
+		borderRadius: 20,
+		backgroundColor: Colors.white,
+		borderWidth: 1,
+		minWidth: 40,
+		alignItems: 'center'
+	},
+	activePageButton: {
+		backgroundColor: Colors.primary
+	},
+	pageButtonText: {
+		color: Colors.primary,
+		fontWeight: '600'
+	},
+	activePageButtonText: {
+		color: Colors.white
+	}
+});
