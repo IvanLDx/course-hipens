@@ -7,6 +7,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import paypalRoutes from './routes/paypalRoutes.js';
 import cookieParser from 'cookie-parser';
 import errorHandler from './middleware/errorHandler.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 import cors from 'cors';
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/paypal', paypalRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/api/config/paypal', (req, res) => {
 	const clientId = process.env.PAYPAL_CLIENT_ID;
