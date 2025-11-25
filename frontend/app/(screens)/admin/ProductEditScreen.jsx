@@ -20,6 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '../../../constants/Utils';
 import { BASE_URL } from '../../../constants/Urls';
 import FormContainer from '../../../components/FormContainer';
+import Message from '../../../components/Message';
 
 const ProductEditScreen = () => {
 	const router = useRouter();
@@ -40,10 +41,10 @@ const ProductEditScreen = () => {
 	useEffect(() => {
 		if (product) {
 			setName(product.name);
-			setPrice(product.price.toString());
+			setPrice(product.price);
 			setImage(product.image);
 			setCategory(product.category);
-			setCountInStock(product.countInStock.toString());
+			setCountInStock(product.countInStock);
 			setDescription(product.description);
 		}
 	}, [product]);
@@ -85,10 +86,84 @@ const ProductEditScreen = () => {
 		}
 	};
 
+	const uploadFileHandler = async () => {
+		try {
+			const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+			if (!permissionResult.granted) {
+				Toast.show({
+					type: 'error',
+					text1: 'Permission denied',
+					text2: 'Camera roll access is required'
+				});
+
+				return;
+			}
+
+			const result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.mediaType.Images,
+				allowsEditing: false,
+				quality: 1
+			});
+
+			if (!result.canceled) {
+				const formData = new FormData();
+				formData.append('image', {
+					uri: result.assets[0].uri,
+					type: 'image/jpeg',
+					name: 'image.jpg'
+				});
+
+				const response = await uploadProductImage(formData).unwrap();
+				setImage(response.image);
+
+				Toast.show({
+					type: 'success',
+					text1: 'Uploaded',
+					text2: 'Image uploaded successfully'
+				});
+			}
+		} catch (error) {
+			Toast.show({
+				type: 'error',
+				text1: 'Upload failed',
+				text2: error?.data?.message || error.error
+			});
+		}
+	};
+
+	if (isLoading) {
+		return (
+			<View style={styles.centered}>
+				<ActivityIndicator size="large" color={Colors.primary} />
+			</View>
+		);
+	}
+
+	if (productError) {
+		return (
+			<View style={styles.centered}>
+				<Message variant="error">{productError?.data?.message || productError.error}</Message>
+			</View>
+		);
+	}
+
 	return (
-		<View>
-			<Text>ProductEditScreen</Text>
-		</View>
+		<SafeAreaView style={styles.safeArea}>
+			<KeyboardAvoidingView behaviour={Platform.OS === 'ios' ? 'padding' : 'height'} styles={{ flex: 1 }}>
+				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.ScrollViewContent} keyboardShouldPersistTaps="handled">
+					<FormContainer>
+						<View style={styles.header}>
+							<TouchableOpacity style={styles.backButton} onPress={router.back()}>
+								<Ionicons name="chevron-back-circle" size={35} color={Colors.primary} />
+							</TouchableOpacity>
+
+							<Text style={styles.title}>Edit product</Text>
+						</View>
+					</FormContainer>
+				</ScrollView>
+			</KeyboardAvoidingView>
+		</SafeAreaView>
 	);
 };
 
