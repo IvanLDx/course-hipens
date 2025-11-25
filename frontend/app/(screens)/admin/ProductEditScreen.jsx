@@ -150,15 +150,109 @@ const ProductEditScreen = () => {
 
 	return (
 		<SafeAreaView style={styles.safeArea}>
-			<KeyboardAvoidingView behaviour={Platform.OS === 'ios' ? 'padding' : 'height'} styles={{ flex: 1 }}>
+			<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} styles={{ flex: 1 }}>
 				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.ScrollViewContent} keyboardShouldPersistTaps="handled">
 					<FormContainer>
 						<View style={styles.header}>
-							<TouchableOpacity style={styles.backButton} onPress={router.back()}>
+							<TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
 								<Ionicons name="chevron-back-circle" size={35} color={Colors.primary} />
 							</TouchableOpacity>
 
 							<Text style={styles.title}>Edit product</Text>
+						</View>
+
+						<View style={styles.form}>
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Name</Text>
+								<TextInput
+									style={styles.input}
+									value={name}
+									onChangeText={setName}
+									placeholder="Enter name"
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+						</View>
+
+						<View style={styles.form}>
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Price</Text>
+								<TextInput
+									style={styles.input}
+									value={price}
+									onChangeText={setPrice}
+									placeholder="Enter price"
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Image</Text>
+								{image && (
+									<View style={styles.imageContainer}>
+										<Image source={{ uri: getImageUrl(image) }} style={styles.productImage} />
+										<Text style={styles.imageUrl}>{getImageUrl(image)}</Text>
+									</View>
+								)}
+
+								<TouchableOpacity style={styles.uploadButton} onPress={uploadFileHandler}>
+									<Text style={styles.uploadButtonText}>
+										{loadingUpload ? <ActivityIndicator size="small" color={Colors.white} /> : 'Upload image'}
+									</Text>
+								</TouchableOpacity>
+							</View>
+
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Count in stock</Text>
+								<TextInput
+									style={styles.input}
+									value={countInStock}
+									onChangeText={setCountInStock}
+									placeholder="Enter count in stock"
+									keyboardType="numeric"
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Category</Text>
+								<TextInput
+									style={styles.input}
+									value={category}
+									onChangeText={setCategory}
+									placeholder="Enter category"
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Description</Text>
+								<TextInput
+									style={[styles.input, styles.textArea]}
+									value={description}
+									onChangeText={setDescription}
+									placeholder="Enter description"
+									multiline
+									numberOfLines={4}
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+
+							<TouchableOpacity
+								style={[styles.submitButton, loadingUpdate && styles.submitButtonDisabled]}
+								onPress={submitHandler}
+								disabled={loadingUpdate}
+							>
+								{loadingUpdate ? (
+									<View style={styles.loadingContainer}>
+										<ActivityIndicator size="small" color={Colors.white} />
+
+										<Text style={styles.submitButtonText}>Update...</Text>
+									</View>
+								) : (
+									<Text style={styles.submitButtonText}>Update Product</Text>
+								)}
+							</TouchableOpacity>
 						</View>
 					</FormContainer>
 				</ScrollView>
@@ -169,4 +263,26 @@ const ProductEditScreen = () => {
 
 export default ProductEditScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: Colors.offWhite,
+		paddingTop: Platform.OS === 'android' ? 20 : 0
+	},
+	ScrollViewContent: {
+		flexGrow: 1,
+		paddingTop: Platform.OS === 'android' ? 20 : 0
+	},
+	header: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 25,
+		paddingHorizontal: 5
+	},
+	center: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: Colors.offWhite
+	}
+});
