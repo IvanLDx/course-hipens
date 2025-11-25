@@ -7,7 +7,7 @@ const { width } = Dimensions.get('window');
 const FormContainer = ({ children }) => {
 	return (
 		<KeyboardAvoidingView
-			behaviour={Platform.OS === 'ios' ? 'padding' : 'height'}
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 			style={styles.keyboardAvoidingView}
 			keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
 		>

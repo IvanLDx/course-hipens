@@ -41,10 +41,10 @@ const ProductEditScreen = () => {
 	useEffect(() => {
 		if (product) {
 			setName(product.name);
-			setPrice(product.price);
+			setPrice(product.price.toString());
 			setImage(product.image);
 			setCategory(product.category);
-			setCountInStock(product.countInStock);
+			setCountInStock(product.countInStock.toString());
 			setDescription(product.description);
 		}
 	}, [product]);
@@ -81,7 +81,7 @@ const ProductEditScreen = () => {
 			Toast.show({
 				type: 'error',
 				text1: 'Error',
-				text2: error?.data?.message || error.error
+				text2: error?.data?.message || error?.error || error?.message
 			});
 		}
 	};
@@ -101,7 +101,7 @@ const ProductEditScreen = () => {
 			}
 
 			const result = await ImagePicker.launchImageLibraryAsync({
-				mediaTypes: ImagePicker.mediaType.Images,
+				mediaTypes: ['images'],
 				allowsEditing: false,
 				quality: 1
 			});
@@ -150,15 +150,109 @@ const ProductEditScreen = () => {
 
 	return (
 		<SafeAreaView style={styles.safeArea}>
-			<KeyboardAvoidingView behaviour={Platform.OS === 'ios' ? 'padding' : 'height'} styles={{ flex: 1 }}>
+			<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} styles={{ flex: 1 }}>
 				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.ScrollViewContent} keyboardShouldPersistTaps="handled">
 					<FormContainer>
 						<View style={styles.header}>
-							<TouchableOpacity style={styles.backButton} onPress={router.back()}>
+							<TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
 								<Ionicons name="chevron-back-circle" size={35} color={Colors.primary} />
 							</TouchableOpacity>
 
 							<Text style={styles.title}>Edit product</Text>
+						</View>
+
+						<View style={styles.form}>
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Name</Text>
+								<TextInput
+									style={styles.input}
+									value={name}
+									onChangeText={setName}
+									placeholder="Enter name"
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+						</View>
+
+						<View style={styles.form}>
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Price</Text>
+								<TextInput
+									style={styles.input}
+									value={price}
+									onChangeText={setPrice}
+									placeholder="Enter price"
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Image</Text>
+								{image && (
+									<View style={styles.imageContainer}>
+										<Image source={{ uri: getImageUrl(image) }} style={styles.productImage} />
+										<Text style={styles.imageUrl}>{getImageUrl(image)}</Text>
+									</View>
+								)}
+
+								<TouchableOpacity style={styles.uploadButton} onPress={uploadFileHandler}>
+									<Text style={styles.uploadButtonText}>
+										{loadingUpload ? <ActivityIndicator size="small" color={Colors.white} /> : 'Upload image'}
+									</Text>
+								</TouchableOpacity>
+							</View>
+
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Count in stock</Text>
+								<TextInput
+									style={styles.input}
+									value={countInStock}
+									onChangeText={setCountInStock}
+									placeholder="Enter count in stock"
+									keyboardType="numeric"
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Category</Text>
+								<TextInput
+									style={styles.input}
+									value={category}
+									onChangeText={setCategory}
+									placeholder="Enter category"
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+
+							<View style={styles.formGroup}>
+								<Text style={styles.label}>Description</Text>
+								<TextInput
+									style={[styles.input, styles.textArea]}
+									value={description}
+									onChangeText={setDescription}
+									placeholder="Enter description"
+									multiline
+									numberOfLines={4}
+									placeholderTextColor={Colors.secondaryTextColor}
+								/>
+							</View>
+
+							<TouchableOpacity
+								style={[styles.submitButton, loadingUpdate && styles.submitButtonDisabled]}
+								onPress={submitHandler}
+								disabled={loadingUpdate}
+							>
+								{loadingUpdate ? (
+									<View style={styles.loadingContainer}>
+										<ActivityIndicator size="small" color={Colors.white} />
+
+										<Text style={styles.submitButtonText}>Update...</Text>
+									</View>
+								) : (
+									<Text style={styles.submitButtonText}>Update Product</Text>
+								)}
+							</TouchableOpacity>
 						</View>
 					</FormContainer>
 				</ScrollView>
@@ -169,4 +263,129 @@ const ProductEditScreen = () => {
 
 export default ProductEditScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: Colors.offWhite,
+		paddingTop: Platform.OS === 'android' ? 20 : 0
+	},
+	ScrollViewContent: {
+		flexGrow: 1,
+		paddingTop: Platform.OS === 'android' ? 20 : 0
+	},
+	header: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 25,
+		paddingHorizontal: 5
+	},
+	centered: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: Colors.offWhite
+	},
+	backButton: {
+		padding: 5
+	},
+	title: {
+		fontSize: 22,
+		fontWeight: '600',
+		marginLeft: 15,
+		color: Colors.primary
+	},
+	form: {
+		backgroundColor: Colors.white,
+		borderRadius: 15,
+		padding: 20,
+		shadowColor: Colors.darkGray,
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 2,
+		gap: 15,
+		marginBottom: 20
+	},
+	formGroup: {
+		marginBottom: 20
+	},
+	label: {
+		fontSize: 16,
+		marginBottom: 8,
+		color: Colors.textColor,
+		fontWeight: '600'
+	},
+	input: {
+		borderWidth: 1,
+		borderColor: Colors.lightGray,
+		borderRadius: 12,
+		padding: 15,
+		fontSize: 16,
+		backgroundColor: Colors.white,
+		color: Colors.textColor
+	},
+	textArea: {
+		height: 120,
+		textAlignVertical: 'top'
+	},
+	imageContainer: {
+		marginBottom: 15,
+		padding: 10,
+		backgroundColor: Colors.white,
+		borderRadius: 12,
+		borderWidth: 1,
+		borderColor: Colors.lightGray
+	},
+	imageUrl: {
+		fontSize: 12,
+		color: Colors.secondaryTextColor,
+		textAlign: 'center'
+	},
+	uploadButton: {
+		backgroundColor: Colors.secondary,
+		paddingVertical: 15,
+		borderRadius: 12,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	uploadButtonText: {
+		colors: Colors.white,
+		fontSize: 16,
+		fontWeight: '600'
+	},
+	submitButton: {
+		backgroundColor: Colors.primary,
+		paddingVertical: 15,
+		borderRadius: 12,
+		alignItems: 'center',
+		marginTop: 10
+	},
+	submitButtonDisabled: {
+		opacity: 0.7
+	},
+	submitButtonText: {
+		color: Colors.white,
+		fontSize: 16,
+		fontWeight: 'bold'
+	},
+	loadingContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		gap: 10
+	},
+	errorText: {
+		color: Colors.textRed,
+		fontSize: 16,
+		textAlign: 'center',
+		marginTop: 10
+	},
+	productImage: {
+		width: '100%',
+		height: 200,
+		borderRadius: 10,
+		marginBottom: 10,
+		backgroundColor: Colors.offWhite
+	}
+});
