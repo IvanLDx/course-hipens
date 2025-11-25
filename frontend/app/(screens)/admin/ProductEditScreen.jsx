@@ -41,10 +41,10 @@ const ProductEditScreen = () => {
 	useEffect(() => {
 		if (product) {
 			setName(product.name);
-			setPrice(product.price);
+			setPrice(product.price.toString());
 			setImage(product.image);
 			setCategory(product.category);
-			setCountInStock(product.countInStock);
+			setCountInStock(product.countInStock.toString());
 			setDescription(product.description);
 		}
 	}, [product]);
@@ -81,7 +81,7 @@ const ProductEditScreen = () => {
 			Toast.show({
 				type: 'error',
 				text1: 'Error',
-				text2: error?.data?.message || error.error
+				text2: error?.data?.message || error?.error || error?.message
 			});
 		}
 	};
@@ -101,7 +101,7 @@ const ProductEditScreen = () => {
 			}
 
 			const result = await ImagePicker.launchImageLibraryAsync({
-				mediaTypes: ImagePicker.mediaType.Images,
+				mediaTypes: ['images'],
 				allowsEditing: false,
 				quality: 1
 			});
@@ -279,10 +279,113 @@ const styles = StyleSheet.create({
 		marginBottom: 25,
 		paddingHorizontal: 5
 	},
-	center: {
+	centered: {
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor: Colors.offWhite
+	},
+	backButton: {
+		padding: 5
+	},
+	title: {
+		fontSize: 22,
+		fontWeight: '600',
+		marginLeft: 15,
+		color: Colors.primary
+	},
+	form: {
+		backgroundColor: Colors.white,
+		borderRadius: 15,
+		padding: 20,
+		shadowColor: Colors.darkGray,
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 2,
+		gap: 15,
+		marginBottom: 20
+	},
+	formGroup: {
+		marginBottom: 20
+	},
+	label: {
+		fontSize: 16,
+		marginBottom: 8,
+		color: Colors.textColor,
+		fontWeight: '600'
+	},
+	input: {
+		borderWidth: 1,
+		borderColor: Colors.lightGray,
+		borderRadius: 12,
+		padding: 15,
+		fontSize: 16,
+		backgroundColor: Colors.white,
+		color: Colors.textColor
+	},
+	textArea: {
+		height: 120,
+		textAlignVertical: 'top'
+	},
+	imageContainer: {
+		marginBottom: 15,
+		padding: 10,
+		backgroundColor: Colors.white,
+		borderRadius: 12,
+		borderWidth: 1,
+		borderColor: Colors.lightGray
+	},
+	imageUrl: {
+		fontSize: 12,
+		color: Colors.secondaryTextColor,
+		textAlign: 'center'
+	},
+	uploadButton: {
+		backgroundColor: Colors.secondary,
+		paddingVertical: 15,
+		borderRadius: 12,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	uploadButtonText: {
+		colors: Colors.white,
+		fontSize: 16,
+		fontWeight: '600'
+	},
+	submitButton: {
+		backgroundColor: Colors.primary,
+		paddingVertical: 15,
+		borderRadius: 12,
+		alignItems: 'center',
+		marginTop: 10
+	},
+	submitButtonDisabled: {
+		opacity: 0.7
+	},
+	submitButtonText: {
+		color: Colors.white,
+		fontSize: 16,
+		fontWeight: 'bold'
+	},
+	loadingContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		gap: 10
+	},
+	errorText: {
+		color: Colors.textRed,
+		fontSize: 16,
+		textAlign: 'center',
+		marginTop: 10
+	},
+	productImage: {
+		width: '100%',
+		height: 200,
+		borderRadius: 10,
+		marginBottom: 10,
 		backgroundColor: Colors.offWhite
 	}
 });
