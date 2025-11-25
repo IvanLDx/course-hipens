@@ -119,7 +119,7 @@ const ProductListScreen = () => {
 								<TouchableOpacity
 									onPress={() =>
 										router.push({
-											pathname: '/admin/ProductEdotScreen',
+											pathname: '/admin/ProductEditScreen',
 											params: { id: product._id }
 										})
 									}
